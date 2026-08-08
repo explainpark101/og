@@ -2,9 +2,13 @@ import { describe, it, expect, vi } from "vitest";
 import worker from "../../src/index";
 import { fetchHtml, UpstreamHttpError } from "../../src/lib/fetch";
 
-vi.mock("../../src/lib/fetch", () => ({
-  fetchHtml: vi.fn().mockResolvedValue("<html><head><title>Example</title></head></html>"),
-}));
+vi.mock("../../src/lib/fetch", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../../src/lib/fetch")>();
+  return {
+    ...actual,
+    fetchHtml: vi.fn().mockResolvedValue("<html><head><title>Example</title></head></html>"),
+  };
+});
 
 vi.mock("../../src/lib/preview", () => ({
   inspectSocialPreview: vi.fn().mockResolvedValue({

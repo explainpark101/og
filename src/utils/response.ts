@@ -6,7 +6,7 @@ export function jsonError(
   code: string,
   status = 400
 ) {
-  return c.json({ error: message, code }, { status });
+  return c.json({ error: message, code }, { status: status as never });
 }
 
 export function jsonSuccess<T>(c: Context, data: T, status: 200 = 200) {
