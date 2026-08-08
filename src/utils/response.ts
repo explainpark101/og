@@ -4,9 +4,9 @@ export function jsonError(
   c: Context,
   message: string,
   code: string,
-  status: 400 | 404 | 502 = 400
+  status = 400
 ) {
-  return c.json({ error: message, code }, { status });
+  return c.json({ error: message, code }, { status: status as never });
 }
 
 export function jsonSuccess<T>(c: Context, data: T, status: 200 = 200) {
