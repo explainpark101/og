@@ -10,16 +10,13 @@ type Handler = {
 class MockElement {
   private attrs = new Map<string, string>();
 
-  constructor(tag: string, rawAttrs = "") {
-    this.tag = tag;
+  constructor(_tag: string, rawAttrs = "") {
     const attrRegex = /([a-zA-Z_:.-]+)\s*=\s*["']([^"']*)["']/g;
     let match: RegExpExecArray | null;
     while ((match = attrRegex.exec(rawAttrs)) !== null) {
       this.attrs.set(match[1].toLowerCase(), match[2]);
     }
   }
-
-  private tag: string;
 
   getAttribute(name: string): string | null {
     return this.attrs.get(name.toLowerCase()) ?? null;
@@ -63,7 +60,7 @@ class MockHTMLRewriter {
 }
 
 beforeAll(() => {
-  (globalThis as { HTMLRewriter?: typeof MockHTMLRewriter }).HTMLRewriter =
+  (globalThis as { HTMLRewriter?: typeof HTMLRewriter }).HTMLRewriter =
     MockHTMLRewriter as unknown as typeof HTMLRewriter;
 });
 
