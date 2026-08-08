@@ -1,5 +1,12 @@
 import { FETCH_TIMEOUT_MS } from "../constants/defaults";
 
+export class UpstreamHttpError extends Error {
+  constructor(public readonly status: number) {
+    super(`Upstream returned HTTP ${status}`);
+    this.name = "UpstreamHttpError";
+  }
+}
+
 export async function fetchHtml(url: string): Promise<string> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
@@ -14,7 +21,7 @@ export async function fetchHtml(url: string): Promise<string> {
     });
     clearTimeout(timeout);
     if (!res.ok) {
-      throw new Error(`Upstream returned HTTP ${res.status}`);
+      throw new UpstreamHttpError(res.status);
     }
     return await res.text();
   } catch (err) {

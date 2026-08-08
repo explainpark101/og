@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import type { Env } from "../types/env";
 import { validateUrl } from "../lib/url";
-import { fetchHtml } from "../lib/fetch";
+import { fetchHtml, UpstreamHttpError } from "../lib/fetch";
 import { inspectSocialPreview } from "../lib/preview";
 import { jsonError, jsonSuccess } from "../utils/response";
 
@@ -19,7 +19,8 @@ app.get("/inspect", async (c) => {
     return jsonSuccess(c, result);
   } catch (err) {
     const message = err instanceof Error ? err.message : "Failed to fetch URL";
-    return jsonError(c, message, "FETCH_ERROR", 502);
+    const status = err instanceof UpstreamHttpError ? err.status : 502;
+    return jsonError(c, message, "FETCH_ERROR", status);
   }
 });
 
